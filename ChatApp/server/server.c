@@ -29,21 +29,12 @@ int main(int argc, char const* argv[])
         exit(EXIT_FAILURE);
     }
  
-    // Forcefully attaching socket to the port 8080
-    if (setsockopt(server_fd, SOL_SOCKET,
-                   SO_REUSEADDR, &opt,
-                   sizeof(opt))) {
-        perror("setsockopt");
-        exit(EXIT_FAILURE);
-    }
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(PORT);
  
     // Forcefully attaching socket to the port 8080
-    if (bind(server_fd, (struct sockaddr*)&address,
-             sizeof(address))
-        < 0) {
+    if (bind(server_fd, (struct sockaddr*)&address,sizeof(address)) < 0 ) {
         perror("bind failed");
         exit(EXIT_FAILURE);
     }
@@ -64,7 +55,7 @@ int main(int argc, char const* argv[])
             valread = read(new_socket, buffer,
                    1024 - 1); // subtract 1 for the null
                               // terminator at the end
-            printf("Message received: %s\n", buffer);
+        printf("Message received: %s\n", buffer);
             send(new_socket, text, strlen(text), 0);
             printf("Message sent: %s\n", text);
             free(text);

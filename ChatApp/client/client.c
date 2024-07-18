@@ -60,7 +60,6 @@ int main(int argc, char const* argv[])
             text = init_text(text);
         }
     } while (function != -1);
- 
     // closing the connected socket
     close(client_fd);
     return 0;
@@ -75,4 +74,4 @@ char *init_text(char *text) {
     printf("Please type message to send to server:\n>> ");
     scanf("%99s", text); // Use %99s to avoid buffer overflow
     return text;
-}`
+}
