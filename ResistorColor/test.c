@@ -3,7 +3,12 @@
 int main(void)
 {
    int result = color_code(YELLOW);
-   printf("Hello, World!+ %d",(result));
+   float a = 10.0;
+   int b = 0x0b1000000;
+   int b = 127;
+
+
+   printf("Hello, World!+ %x",b);
 
    unsigned int value = 20;
    unsigned int *pointer;
