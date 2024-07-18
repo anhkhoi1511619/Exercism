@@ -50,10 +50,10 @@ int main(int argc, char const* argv[])
     {
         if(strlen(text) != 0) {
             send(client_fd, text, strlen(text), 0);
-            printf("Hello message sent\n");
+            printf("Message sent: %s\n", text);
             valread = read(client_fd, buffer,1024 - 1); // subtract 1 for the null
                                                         // terminator at the end
-            printf("%s\n", buffer);
+            printf("Message received: %s\n", buffer);
             
             free(text);
         } else{
@@ -67,7 +67,7 @@ int main(int argc, char const* argv[])
 }
 
 char *init_text(char *text) {
-    text = (char *)malloc(100 * sizeof(char)); // Allocate memory for the input string
+    text = (char *)malloc(100 * sizeof(char)); // Allo`cate memory for the input string
     if (text == NULL) {
         printf("Memory allocation failed\n");
     }
@@ -75,4 +75,4 @@ char *init_text(char *text) {
     printf("Please type message to send to server:\n>> ");
     scanf("%99s", text); // Use %99s to avoid buffer overflow
     return text;
-}
+}`

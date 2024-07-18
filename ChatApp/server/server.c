@@ -7,6 +7,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #define PORT 51111
+char *init_text(char *input);
+
 int main(int argc, char const* argv[])
 {
     int function = 0;
@@ -19,7 +21,7 @@ int main(int argc, char const* argv[])
     int opt = 1;
     socklen_t addrlen = sizeof(address);
     char buffer[1024] = { 0 };
-    char* hello = "Hello from server";
+    char* text = init_text(text);
  
     // Creating socket file descriptor
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -58,12 +60,17 @@ int main(int argc, char const* argv[])
     }
     do
     {
-        valread = read(new_socket, buffer,
+        if(strlen(text) != 0) {
+            valread = read(new_socket, buffer,
                    1024 - 1); // subtract 1 for the null
                               // terminator at the end
-        printf("%s\n", buffer);
-        send(new_socket, hello, strlen(hello), 0);
-        printf("Hello message sent\n");
+            printf("Message received: %s\n", buffer);
+            send(new_socket, text, strlen(text), 0);
+            printf("Message sent: %s\n", text);
+            free(text);
+        } else{
+            text = init_text(text);
+        }
     } while (function != -1);
 
  
@@ -72,4 +79,15 @@ int main(int argc, char const* argv[])
     // closing the listening socket
     close(server_fd);
     return 0;
+}
+
+char *init_text(char *text) {
+    text = (char *)malloc(100 * sizeof(char)); // Allocate memory for the input string
+    if (text == NULL) {
+        printf("Memory allocation failed\n");
+    }
+
+    printf("Please type message to send to server:\n>> ");
+    scanf("%99s", text); // Use %99s to avoid buffer overflow
+    return text;
 }
