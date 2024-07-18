@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #define PORT 51111
 
-void reset_input(char *input);
+char *init_text(char *input);
  
 int main(int argc, char const* argv[])
 {
@@ -19,14 +19,7 @@ int main(int argc, char const* argv[])
     printf("Please choose a function:\n>>");
     scanf("%d", &function);
 
-    char *hello = (char *)malloc(100 * sizeof(char)); // Allocate memory for the input string
-    if (hello == NULL) {
-        printf("Memory allocation failed\n");
-    }
-
-    printf("Please type message to send to server:\n>> ");
-    scanf("%99s", hello); // Use %99s to avoid buffer overflowo);
-
+    char *text = init_text(text);
 
     if ((client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         printf("\n Socket creation error \n");
@@ -55,21 +48,16 @@ int main(int argc, char const* argv[])
 
     do
     {
-        if(strlen(hello) != 0) {
-            send(client_fd, hello, strlen(hello), 0);
+        if(strlen(text) != 0) {
+            send(client_fd, text, strlen(text), 0);
             printf("Hello message sent\n");
             valread = read(client_fd, buffer,1024 - 1); // subtract 1 for the null
                                                         // terminator at the end
             printf("%s\n", buffer);
             
-            free(hello);
+            free(text);
         } else{
-            hello = (char *)malloc(100 * sizeof(char)); // Allocate memory for the input string
-            if (hello == NULL) {
-                printf("Memory allocation failed\n");
-            }
-            printf("Please type message to send to server:\n>> ");
-            scanf("%99s", hello); // Use %99s to avoid buffer overflow);
+            text = init_text(text);
         }
     } while (function != -1);
  
@@ -78,8 +66,7 @@ int main(int argc, char const* argv[])
     return 0;
 }
 
-void reset_input(char *text) {
-    free(text);
+char *init_text(char *text) {
     text = (char *)malloc(100 * sizeof(char)); // Allocate memory for the input string
     if (text == NULL) {
         printf("Memory allocation failed\n");
@@ -87,4 +74,5 @@ void reset_input(char *text) {
 
     printf("Please type message to send to server:\n>> ");
     scanf("%99s", text); // Use %99s to avoid buffer overflow
+    return text;
 }

@@ -9,24 +9,6 @@
 #define PORT 51111
 int main(int argc, char const* argv[])
 {
-
-// int function;
-// function = 0;
-// do
-// {
-//     printf("Please choose a function:\n>>");
-//     scanf("%d", &function);
-//     switch(function)
-//     {
-//         case 1:
-//             /* do your stuff */
-//             break;
-//         default:
-//             fprintf(stderr, "Error! Please try again.\n\n");
-//             break;
-//     }
-// } while(function != 2);
-// printf("You chose to exit.\n\n");
     int function = 0;
     printf("Please choose a function:\n>>");
     scanf("%d", &function);
