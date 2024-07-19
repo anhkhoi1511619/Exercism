@@ -63,23 +63,6 @@ int main(int argc, char const* argv[])
     pthread_create(&send_data_socket, NULL, send_data_socket_func, NULL);
 
     pthread_exit(NULL);
-
-    // do
-    // {
-    //     if(strlen(text) != 0) {
-    //     //     valread = read(new_socket, buffer,
-    //     //            1024 - 1); // subtract 1 for the null
-    //     //                       // terminator at the end
-    //     // printf("Message received: %s\n", buffer);
-    //         send(new_socket, text, strlen(text), 0);
-    //         printf("Message sent: %s\n", text);
-    //         free(text);
-    //     } else{
-    //         text = init_text(text);
-    //     }
-    // } while (function != -1);
-
- 
     // closing the connected socket
     close(new_socket);
     // closing the listening socket
