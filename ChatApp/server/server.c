@@ -79,6 +79,8 @@ char *init_text(char *text) {
     }
 
     printf("Please type message to send to server:\n>> ");
-    scanf("%99s", text); // Use %99s to avoid buffer overflow
+    scanf(" ");
+    scanf("%99[^\n]s", text); // Use %99s to avoid buffer overflow
+    printf("You entered: %s length: %lu\n", text, strlen(text));
     return text;
 }
