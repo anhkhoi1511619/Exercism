@@ -9,19 +9,18 @@
 #include <pthread.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <stdbool.h>
+
 #define PORT 51111
 char *init_text(char *input);
 void *read_data_socket_func();
 void *send_data_socket_func();
 
-int function = 0;
 int new_socket;
 char* text;
+bool shouldStop = false;
 int main(int argc, char const* argv[])
 {
-    printf("Please choose a function:\n>>");
-    scanf("%d", &function);
-
     int server_fd;
     ssize_t valread;
     struct sockaddr_in address;
@@ -76,16 +75,16 @@ char *init_text(char *text) {
         printf("Memory allocation failed\n");
     }
 
-    printf("Please type message to send for client:\n>> ");
+    // printf("Please type message to send for client:\n>> ");
     scanf(" ");
     scanf("%99[^\n]s", text); // Use %99s to avoid buffer overflow
-    printf("You entered: %s length: %lu\n", text, strlen(text));
+    // printf("You entered: %s length: %lu\n", text, strlen(text));
     return text;
 }
 
 void* read_data_socket_func()
 {
-    do
+    while (!shouldStop)
     {
         char buffer[1024] = { 0 };
         int valread = read(new_socket, buffer,
@@ -93,15 +92,13 @@ void* read_data_socket_func()
                               // terminator at the end
         if(valread > 0) {
             printf("Message received: %s\n", buffer);
-        } else{
-            printf("Checking data from socket\n");
         }
-    } while (function != -1);
+    }
 
 }
 void* send_data_socket_func()
 {
-    do
+    while (!shouldStop)
     {
         if(strlen(text) != 0) {
             send(new_socket, text, strlen(text), 0);
@@ -110,5 +107,5 @@ void* send_data_socket_func()
         } else{
             text = init_text(text);
         }
-    } while (function != -1);
+    }
 }
