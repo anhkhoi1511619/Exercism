@@ -16,14 +16,13 @@ char *init_text(char *input);
 void *read_data_socket_func();
 void *send_data_socket_func();
 
-int new_socket;
+int server_fd, new_socket;
 char* text;
 bool shouldStop = false;
 char senderName[100] = "BANG";
 char receiverName[100] = "KHOI";
 int main(int argc, char const* argv[])
 {
-    int server_fd;
     ssize_t valread;
     struct sockaddr_in address;
     int opt = 1;
@@ -111,6 +110,15 @@ void* send_data_socket_func()
             free(text);
         } else{
             text = init_text(text);
+        }
+        if(strcmp(text, "#exit") == 0) {
+            shouldStop = true;
+            printf("Stop Programs with shouldStop: %d\n", shouldStop);
+            shutdown(new_socket, SHUT_RDWR);
+            // closing the connected socket
+            close(new_socket);
+            // closing the listening socket
+            close(server_fd);
         }
     }
 }

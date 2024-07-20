@@ -108,5 +108,14 @@ void* send_data_socket_func()
         } else{
             text = init_text(text);
         }
+
+        if(strcmp(text, "#exit") == 0) {
+            shouldStop = true;
+            printf("Stop Programs with shouldStop: %d\n", shouldStop);
+            // Immediately stop the socket
+            shutdown(client_fd, SHUT_RDWR);
+            // closing the connected socket
+            close(client_fd);
+        }
     }
 }
