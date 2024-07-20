@@ -18,7 +18,10 @@ void *send_data_socket_func();
 
 int client_fd;
 char* text;
- bool shouldStop = false;
+bool shouldStop = false;
+char senderName[100] = "KHOI";
+char receiverName[100] = "BANG";
+
 int main(int argc, char const* argv[])
 {
     int status, valread;
@@ -65,15 +68,18 @@ int main(int argc, char const* argv[])
 }
 
 char *init_text(char *text) {
-    text = (char *)malloc(100 * sizeof(char)); // Allo`cate memory for the input string
+    text = (char *)malloc(100 * sizeof(char)); // Allocate memory for the input string
     if (text == NULL) {
         printf("Memory allocation failed\n");
     }
-    // printf("Please type message to send for server:\n>> ");
     scanf(" ");
-
     scanf("%99[^\n]s", text); // Use %99s to avoid buffer overflow
-    // printf("You entered: %s length: %lu\n", text, strlen(text));
+    if(strcmp(text, "#name") == 0){
+        printf("Please choose the name of sender:\n>>");
+        scanf("%99s", senderName); // Use %99s to avoid buffer overflow
+        printf("Please choose the name of receiver:\n>>");
+        scanf("%99s", receiverName); // Use %99s to avoid buffer overflow
+    }
     return text;
 }
 
@@ -86,7 +92,7 @@ void* read_data_socket_func()
                    1024 - 1); // subtract 1 for the null
                               // terminator at the end
         if(valread > 0) {
-            printf("Message received: %s\n", buffer);
+            printf("%s received: %s\n",receiverName,  buffer);
         } 
     }
 
@@ -97,7 +103,7 @@ void* send_data_socket_func()
     {
         if(strlen(text) != 0) {
             send(client_fd, text, strlen(text), 0);
-            printf("Message sent: %s\n", text);
+            printf("%s sent: %s\n",senderName, text);
             free(text);
         } else{
             text = init_text(text);
