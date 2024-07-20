@@ -92,7 +92,7 @@ void* read_data_socket_func()
                    1024 - 1); // subtract 1 for the null
                               // terminator at the end
         if(valread > 0) {
-            printf("%s received: %s\n",receiverName,  buffer);
+            printf("%s sent: %s\n",receiverName,  buffer);
         } 
     }
 
@@ -103,7 +103,7 @@ void* send_data_socket_func()
     {
         if(strlen(text) != 0) {
             send(client_fd, text, strlen(text), 0);
-            printf("%s sent: %s\n",senderName, text);
+            printf("                                 %s :%s sent\n",text, senderName);
             free(text);
         } else{
             text = init_text(text);
