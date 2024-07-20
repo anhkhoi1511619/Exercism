@@ -11,6 +11,8 @@
 #include <unistd.h>
 #include <stdbool.h>
 #define PORT 51111
+#define IP_ADRESS "127.0.0.1"
+
 
 char *init_text(char *input);
 void *read_data_socket_func();
@@ -27,6 +29,7 @@ int main(int argc, char const* argv[])
     int status, valread;
     struct sockaddr_in serv_addr;
     char buffer[1024] = { 0 };
+    printf("Client is running at port %d and IP address %s\n", PORT, IP_ADRESS);
     text = init_text(text);
 
     if ((client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -39,7 +42,7 @@ int main(int argc, char const* argv[])
  
     // Convert IPv4 and IPv6 addresses from text to binary
     // form
-    if (inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)
+    if (inet_pton(AF_INET, IP_ADRESS, &serv_addr.sin_addr)
         <= 0) {
         printf(
             "\nInvalid address/ Address not supported \n");
@@ -95,7 +98,7 @@ void* read_data_socket_func()
             printf("%s sent: %s\n",receiverName,  buffer);
         } 
     }
-
+    return &shouldStop;
 }
 void* send_data_socket_func()
 {
@@ -116,6 +119,9 @@ void* send_data_socket_func()
             shutdown(client_fd, SHUT_RDWR);
             // closing the connected socket
             close(client_fd);
+
+            pthread_exit(NULL);
         }
     }
+    return &shouldStop;
 }

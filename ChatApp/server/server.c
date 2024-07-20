@@ -28,6 +28,7 @@ int main(int argc, char const* argv[])
     int opt = 1;
     socklen_t addrlen = sizeof(address);
     char buffer[1024] = { 0 };
+    printf("Server is runing at port %d\n", PORT);
     text = init_text(text);
  
     // Creating socket file descriptor
@@ -61,7 +62,7 @@ int main(int argc, char const* argv[])
 
     pthread_create(&read_data_socket, NULL, read_data_socket_func, NULL);
     pthread_create(&send_data_socket, NULL, send_data_socket_func, NULL);
-
+    
     pthread_exit(NULL);
     // closing the connected socket
     close(new_socket);
@@ -98,7 +99,7 @@ void* read_data_socket_func()
             printf("%s sent: %s\n",receiverName, buffer);
         }
     }
-
+    return &shouldStop;
 }
 void* send_data_socket_func()
 {
@@ -119,6 +120,8 @@ void* send_data_socket_func()
             close(new_socket);
             // closing the listening socket
             close(server_fd);
+            pthread_exit(NULL);
         }
     }
+    return &shouldStop;
 }
