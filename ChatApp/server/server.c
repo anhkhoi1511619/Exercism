@@ -30,7 +30,7 @@ int main(int argc, char const* argv[])
     char buffer[1024] = { 0 };
     printf("Server is runing at port %d\n", PORT);
     text = init_text(text);
- 
+	printf("Waiting for text of user\n "); 
     // Creating socket file descriptor
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         perror("socket failed");
@@ -105,13 +105,17 @@ void* send_data_socket_func()
 {
     while (!shouldStop)
     {
+	if(text != NULL) {
         if(strlen(text) != 0) {
             send(new_socket, text, strlen(text), 0);
             printf("                                 %s :%s sent\n",text, senderName);
-            free(text);
+        
+	    free(text);
+	    text=NULL;
         } else{
             text = init_text(text);
         }
+	if(text != NULL) {
         if(strcmp(text, "#exit") == 0) {
             shouldStop = true;
             printf("Stop Programs with shouldStop: %d\n", shouldStop);
@@ -122,6 +126,11 @@ void* send_data_socket_func()
             close(server_fd);
             pthread_exit(NULL);
         }
+	}
+    } else {
+    	text = init_text(text);
+    }
+
     }
     return &shouldStop;
 }

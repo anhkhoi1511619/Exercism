@@ -71,10 +71,11 @@ int main(int argc, char const* argv[])
 }
 
 char *init_text(char *text) {
-    text = (char *)malloc(100 * sizeof(char)); // Allocate memory for the input string
+   text = (char *)malloc(100 * sizeof(char)); // Allocate memory for the input string
     if (text == NULL) {
         printf("Memory allocation failed\n");
     }
+    printf("Waiting for text of user\n");
     scanf(" ");
     scanf("%99[^\n]s", text); // Use %99s to avoid buffer overflow
     if(strcmp(text, "#name") == 0){
@@ -104,14 +105,18 @@ void* send_data_socket_func()
 {
     while (!shouldStop)
     {
+	if(text != NULL) {
+		printf("Checking to send\n");
         if(strlen(text) != 0) {
             send(client_fd, text, strlen(text), 0);
             printf("                                 %s :%s sent\n",text, senderName);
-            free(text);
+           
+	    free(text);
+	    text = NULL;
         } else{
             text = init_text(text);
         }
-
+	if(text != NULL) {
         if(strcmp(text, "#exit") == 0) {
             shouldStop = true;
             printf("Stop Programs with shouldStop: %d\n", shouldStop);
@@ -122,6 +127,10 @@ void* send_data_socket_func()
 
             pthread_exit(NULL);
         }
+	}
+    } else {
+    	text = init_text(text);
+    }
     }
     return &shouldStop;
 }
